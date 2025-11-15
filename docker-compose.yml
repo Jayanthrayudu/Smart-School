@@ -1,0 +1,31 @@
+
+services:
+  backend:
+    build:
+      context: ./smart-school-backend
+      dockerfile: Dockerfile
+    container_name: smartschool-backend
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./smart-school-backend/.env
+    networks:
+      - smartschool-network
+
+  frontend:
+    build:
+      context: ./smart-school-frontend
+      dockerfile: Dockerfile
+    container_name: smartschool-frontend
+    ports:
+      - "3000:80"
+    env_file:
+      - ./smart-school-frontend/.env
+    depends_on:
+      - backend
+    networks:
+      - smartschool-network
+
+networks:
+  smartschool-network:
+    driver: bridge
