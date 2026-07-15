@@ -13,7 +13,6 @@ import '../styles/teacher.css';
 function TeacherDashboardPage() {
   return (
     <div className="dashboard-container">
-      <Header />
       <div className="main-content">
         <Sidebar />
         <main>

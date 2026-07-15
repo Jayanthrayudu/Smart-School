@@ -343,3 +343,46 @@
   margin-bottom: 10px;
   color: #333;
 }
+
+/* ---------- Mobile Responsive for Classes Form ---------- */
+@media (max-width: 768px) {
+  .admin-classes-container {
+    padding: 1rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem; /* spacing between inputs */
+    width: 100%;
+    
+  }
+
+  .form-group input,
+  .form-group button {
+    width: 100%; /* make inputs & button full width */
+    box-sizing: border-box;
+    padding: 0.5rem;
+    font-size: 1rem;
+    
+  }
+
+  .class-list li {
+    flex-direction: column; /* stack text and delete button */
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+
+  .class-list li button.delete-btn {
+    align-self: flex-end; /* move delete button to the right */
+    margin-top: 0.25rem;
+  }
+
+  /* Reduce table padding if used in mobile */
+  table.table th,
+  table.table td {
+    font-size: 0.85rem;
+    padding: 0.35rem;
+  }
+}
+

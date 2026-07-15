@@ -12,7 +12,6 @@ import StudentProfile from '../components/student/Profile';
 function StudentDashboardPage() {
   return (
     <div className="dashboard-container">
-      <Header />
       <div className="main-content">
         <Sidebar />
         <main>

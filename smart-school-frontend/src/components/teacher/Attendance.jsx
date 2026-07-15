@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react';
 import { getTeacherCourses } from '../../services/courseService';
 import { getCourseStudents, markAttendance } from '../../services/attendanceService';
 import Loader from '../common/Loader';
+import Header from '../common/Header.jsx';
+import Sidebar from '../common/Sidebar.jsx';
+import '../../styles/teacher.css';
 
 function TeacherAttendance() {
   const [courses, setCourses] = useState([]);
@@ -9,9 +12,11 @@ function TeacherAttendance() {
   const [students, setStudents] = useState([]);
   const [attendance, setAttendance] = useState({});
   const [loading, setLoading] = useState(false);
-
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
+
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   useEffect(() => {
     const loadCourses = async () => {
@@ -19,7 +24,7 @@ function TeacherAttendance() {
       try {
         const data = await getTeacherCourses();
         setCourses(data);
-      } catch (err) {
+      } catch {
         setMessage("Failed to load your courses.");
         setMessageType("error");
       } finally {
@@ -37,11 +42,10 @@ function TeacherAttendance() {
       const data = await getCourseStudents(courseName);
       const studentList = data.students || [];
       setStudents(studentList);
-
       const initialAttendance = {};
       studentList.forEach(s => (initialAttendance[s.name] = 'Present'));
       setAttendance(initialAttendance);
-    } catch (err) {
+    } catch {
       setMessage("Failed to load students.");
       setMessageType("error");
     } finally {
@@ -59,76 +63,70 @@ function TeacherAttendance() {
       setMessageType("error");
       return;
     }
-
     try {
       await markAttendance(selectedCourse, attendance);
       setMessage(`Attendance marked for ${selectedCourse}!`);
       setMessageType("success");
-    } catch (err) {
+    } catch {
       setMessage("Failed to save attendance.");
       setMessageType("error");
     }
-
     setTimeout(() => setMessage(''), 3000);
   };
 
   if (loading) return <Loader />;
 
   return (
-    <div className="teacher-attendance">
-      <h2>Mark Student Attendance</h2>
+    <div className={`teacher-layout ${isSidebarOpen ? 'sidebar-open' : ''}`}>
+      <Sidebar isOpen={isSidebarOpen} onClose={toggleSidebar} />
+      <div className="teacher-content">
+        <Header onMenuClick={toggleSidebar} />
 
-      {message && (
-        <div className={`message-box ${messageType}`}>
-          {message}
-        </div>
-      )}
+        <div className="teacher-attendance">
+          <h2>Mark Student Attendance</h2>
 
-      <div className="course-select">
-        <label>Select Course:</label>
-        <select value={selectedCourse} onChange={(e) => handleCourseChange(e.target.value)}>
-          <option value="">-- Choose Course --</option>
-          {courses.map(course => (
-            <option key={course.id} value={course.name}>
-              {course.name}
-            </option>
-          ))}
-        </select>
-      </div>
+          {message && <div className={`message-box ${messageType}`}>{message}</div>}
 
-      {students.length > 0 && (
-        <div className="attendance-form">
-          <h3>{selectedCourse} - Mark Attendance</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>Student</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {students.map(student => (
-                <tr key={student.id}>
-                  <td>{student.name}</td>
-                  <td>
-                    <select
-                      value={attendance[student.name] || 'Present'}
-                      onChange={(e) => handleStatusChange(student.name, e.target.value)}
-                    >
-                      <option value="Present">Present</option>
-                      <option value="Absent">Absent</option>
-                    </select>
-                  </td>
-                </tr>
+          <div className="course-select">
+            <label>Select Course:</label>
+            <select value={selectedCourse} onChange={(e) => handleCourseChange(e.target.value)}>
+              <option value="">-- Choose Course --</option>
+              {courses.map(course => (
+                <option key={course.id} value={course.name}>{course.name}</option>
               ))}
-            </tbody>
-          </table>
+            </select>
+          </div>
 
-          <button onClick={handleSubmit} className="submit-btn">
-            Submit Attendance
-          </button>
+          {students.length > 0 && (
+            <div className="attendance-form">
+              <h3>{selectedCourse} - Mark Attendance</h3>
+              <table>
+                <thead>
+                  <tr><th>Student</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                  {students.map(student => (
+                    <tr key={student.id}>
+                      <td>{student.name}</td>
+                      <td>
+                        <select
+                          value={attendance[student.name] || 'Present'}
+                          onChange={(e) => handleStatusChange(student.name, e.target.value)}
+                        >
+                          <option value="Present">Present</option>
+                          <option value="Absent">Absent</option>
+                        </select>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+
+              <button onClick={handleSubmit} className="submit-btn">Submit Attendance</button>
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 }

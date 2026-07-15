@@ -5,7 +5,7 @@
   padding: 0;
   font-family: 'Segoe UI', sans-serif;
   background: linear-gradient(135deg, #f2f6fc, #e3eefc);
-  min-height: 75vh;
+  min-height: 80vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -101,4 +101,35 @@
 
 .login-register-link:hover::after {
   width: 100%;
+}
+
+
+/* Responsive fix for small screens */
+@media (max-width: 480px) {
+  .login-wrapper {
+    
+    justify-content: flex-start;
+    padding-top: 50px;
+    padding-left: 3rem;
+    min-height: 85vh;
+  }
+
+  .login-container {
+    padding: 15px;
+  }
+
+  .login-heading {
+    font-size: 1.5rem;
+    padding-bottom: 1rem;
+  }
+
+  .login-input {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .login-button {
+    font-size: 15px;
+    padding: 10px;
+  }
 }

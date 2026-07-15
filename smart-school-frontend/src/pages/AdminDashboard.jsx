@@ -17,7 +17,6 @@ import AdminProfile from '../components/admin/profile';
 function AdminDashboardPage() {
   return (
     <div className="dashboard-container">
-      <Header />
       <div className="main-content">
         <Sidebar />
         <main>

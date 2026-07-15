@@ -468,3 +468,55 @@ body {
     transform: translateY(0);
   }
 }
+
+
+/* ===== Mobile Responsive for Teacher Forms ===== */
+@media (max-width: 768px) {
+  .teacher-assignments .form-container,
+  .teacher-grades .form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* space between inputs */
+    width: 100%; /* full width */
+    padding: 0 10px;
+    box-sizing: border-box;
+  }
+
+  .teacher-assignments .form-container input,
+  .teacher-assignments .form-container button,
+  .teacher-grades .form-container input,
+  .teacher-grades .form-container button {
+    width: 100%; /* inputs and button full width */
+    box-sizing: border-box;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    outline: none;
+  }
+
+  .teacher-assignments table,
+  .teacher-grades table {
+    width: 100%;
+    overflow-x: auto; 
+  }
+
+  .teacher-assignments table th,
+  .teacher-assignments table td,
+  .teacher-grades table th,
+  .teacher-grades table td {
+    padding: 8px;
+    text-align: left;
+    white-space: nowrap; 
+  }
+
+  .teacher-assignments h2,
+  .teacher-grades h2 {
+    font-size: 1.2rem;
+    padding-left: 10px;
+  }
+
+  .teacher-assignments .table,
+  .teacher-grades .table {
+    margin: 0; /* remove extra margin for small screens */
+  }
+}

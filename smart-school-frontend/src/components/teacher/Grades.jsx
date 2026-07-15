@@ -1,25 +1,23 @@
 import { useState, useEffect } from 'react';
 import { getTeacherGrades, submitGrade } from '../../services/gradeService';
+import Header from '../common/Header.jsx';
+import Sidebar from '../common/Sidebar.jsx';
+import '../../styles/teacher.css';
 
 function TeacherGrades() {
   const [grades, setGrades] = useState([]);
-  const [formData, setFormData] = useState({
-    studentName: '',
-    assignmentTitle: '',
-    grade: ''
-  });
+  const [formData, setFormData] = useState({ studentName: '', assignmentTitle: '', grade: '' });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
-  // 🔥 Fetch teacher grades
   useEffect(() => {
     const fetchGrades = async () => {
       try {
         const data = await getTeacherGrades();
-        console.log("Fetched Grades:", data);
-        setGrades(data);  // Backend already sends correct structure
-      } catch (err) {
-        console.error(err);
+        setGrades(data);
+      } catch {
         setError('Failed to load grades');
       } finally {
         setLoading(false);
@@ -28,112 +26,55 @@ function TeacherGrades() {
     fetchGrades();
   }, []);
 
-  // Input handler
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  // Submit grade
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const payload = {
-        studentName: formData.studentName,
-        assignmentTitle: formData.assignmentTitle,
-        grade: formData.grade
-      };
-
-      await submitGrade(payload);
-
-      // Refresh UI instantly
+      await submitGrade(formData);
       const updated = await getTeacherGrades();
       setGrades(updated);
-
-      // Reset form
       setFormData({ studentName: '', assignmentTitle: '', grade: '' });
-      setError('');
-    } catch (err) {
-      console.error(err);
-
-      if (err.response?.data?.message) {
-        setError(err.response.data.message);
-      } else {
-        setError('Failed to submit grade || Assignment does not exist');
-      }
+    } catch {
+      setError('Failed to submit grade');
     }
   };
 
   if (loading) return <div>Loading...</div>;
 
   return (
-    <div className="teacher-grades">
-      <h2 className="title">Manage Grades</h2>
+    <div className={`teacher-layout ${isSidebarOpen ? 'sidebar-open' : ''}`}>
+      <Sidebar isOpen={isSidebarOpen} onClose={toggleSidebar} />
+      <div className="teacher-content">
+        <Header onMenuClick={toggleSidebar} />
 
-      {error && (
-        <div className="error-message" style={{ color: "red", marginBottom: "10px" }}>
-          ⚠️ {error}
+        <div className="teacher-grades">
+          <h2>Manage Grades</h2>
+          {error && <div className="error">{error}</div>}
+          <form className="form-container" onSubmit={handleSubmit}>
+            <input name="studentName" placeholder="Student Name" value={formData.studentName} onChange={handleChange} required />
+            <input name="assignmentTitle" placeholder="Assignment Title" value={formData.assignmentTitle} onChange={handleChange} required />
+            <input name="grade" placeholder="Grade" value={formData.grade} onChange={handleChange} required />
+            <button type="submit">Submit Grade</button>
+          </form>
+
+          <table className="table">
+            <thead>
+              <tr><th>Course</th><th>Assignment</th><th>Student</th><th>Grade</th></tr>
+            </thead>
+            <tbody>
+              {grades.length > 0 ? grades.map((g, i) => (
+                <tr key={i}>
+                  <td>{g.courseName}</td>
+                  <td>{g.assignmentTitle}</td>
+                  <td>{g.studentName}</td>
+                  <td>{g.grade}</td>
+                </tr>
+              )) : <tr><td colSpan="4">No grades submitted yet.</td></tr>}
+            </tbody>
+          </table>
         </div>
-      )}
-
-      {/* Form */}
-      <form className="form-container" onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="studentName"
-          value={formData.studentName}
-          onChange={handleChange}
-          placeholder="Student Name"
-          className="input"
-          required
-        />
-        <input
-          type="text"
-          name="assignmentTitle"
-          value={formData.assignmentTitle}
-          onChange={handleChange}
-          placeholder="Assignment Title"
-          className="input"
-          required
-        />
-        <input
-          type="text"
-          name="grade"
-          value={formData.grade}
-          onChange={handleChange}
-          placeholder="Grade (e.g. A, B, 85)"
-          className="input"
-          required
-        />
-        <button type="submit" className="button">Submit Grade</button>
-      </form>
-
-      {/* Table */}
-      <table className="table">
-        <thead>
-          <tr>
-            <th>Course</th>
-            <th>Assignment</th>
-            <th>Student</th>
-            <th>Grade</th>
-          </tr>
-        </thead>
-        <tbody>
-          {grades.length > 0 ? (
-            grades.map((grade, index) => (
-              <tr key={index}>
-                <td>{grade.courseName}</td>
-                <td>{grade.assignmentTitle}</td>
-                <td>{grade.studentName}</td>
-                <td>{grade.grade}</td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="4">No grades submitted yet.</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+      </div>
     </div>
   );
 }

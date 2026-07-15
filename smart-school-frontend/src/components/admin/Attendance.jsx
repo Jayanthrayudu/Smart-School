@@ -1,15 +1,19 @@
 // src/components/admin/AdminAttendance.jsx
 import { useState, useEffect } from 'react';
-import {
-  getAllStudents,
-  getAllAttendance,
-} from '../../services/attendanceService';
+import { getAllStudents, getAllAttendance } from '../../services/attendanceService';
+import Header from '../common/Header.jsx';
+import Sidebar from '../common/Sidebar.jsx';
+import '../../styles/admin.css';
 
 export default function AdminAttendance() {
-  const [students, setStudents] = useState([]);   // [{ studentName }]
-  const [attendance, setAttendance] = useState([]); // [{ id, studentName, date, status, ... }]
+  const [students, setStudents] = useState([]);
+  const [attendance, setAttendance] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  // ⭐ Sidebar Toggle State
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -19,14 +23,12 @@ export default function AdminAttendance() {
           getAllAttendance(),
         ]);
 
-        /* ---------- Students (no real id) ---------- */
         const studentsWithKey = studentsRes.map((s, i) => ({
           ...s,
-          tempKey: `s-${i}`, // stable key for React
+          tempKey: `s-${i}`,
         }));
         setStudents(studentsWithKey);
 
-        /* ---------- Attendance (id + name already there) ---------- */
         setAttendance(attendanceRes);
       } catch (err) {
         console.error(err);
@@ -43,50 +45,59 @@ export default function AdminAttendance() {
   if (error) return <div className="error">{error}</div>;
 
   return (
-    <div className="admin-attendance-container">
-      <h2 className="title">Admin Attendance Overview</h2>
+    <div className={`admin-layout ${isSidebarOpen ? "sidebar-open" : ""}`}>
+      {/* Sidebar */}
+      <Sidebar isOpen={isSidebarOpen} onClose={toggleSidebar} />
 
-      {/* ---------- ALL STUDENTS ---------- */}
-      <div className="section">
-        <h3>All Students</h3>
-        <table className="table">
-          <thead><tr><th>#</th><th>Name</th></tr></thead>
-          <tbody>
-            {students.map((s, idx) => (
-              <tr key={s.tempKey}><td>{idx + 1}</td><td>{s.studentName}</td></tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <div className="admin-content">
+        {/* Header */}
+        <Header onMenuClick={toggleSidebar} />
 
-      {/* ---------- ALL ATTENDANCE RECORDS ---------- */}
-      <div className="section">
-        <h3>All Attendance Records</h3>
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Date</th><th>Student ID</th><th>Student Name</th><th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {attendance.map(a => (
-              <tr key={a.id}>
-                <td>{a.date}</td>
-                <td>{a.id}</td>
-                <td>{a.studentName}</td>
-                <td
-                  style={{
-                    color:
-                      a.status?.toLowerCase() === 'present' ? 'green' : 'red',
-                    fontWeight: 'bold',
-                  }}
-                >
-                  {a.status}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="admin-attendance-container">
+          <h2 className="title">Admin Attendance Overview</h2>
+
+          {/* ---------- ALL STUDENTS ---------- */}
+          <div className="section">
+            <h3>All Students</h3>
+            <table className="table">
+              <thead>
+                <tr><th>#</th><th>Name</th></tr>
+              </thead>
+              <tbody>
+                {students.map((s, idx) => (
+                  <tr key={s.tempKey}><td>{idx + 1}</td><td>{s.studentName}</td></tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* ---------- ALL ATTENDANCE RECORDS ---------- */}
+          <div className="section">
+            <h3>All Attendance Records</h3>
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>Date</th><th>Student ID</th><th>Student Name</th><th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {attendance.map(a => (
+                  <tr key={a.id}>
+                    <td>{a.date}</td>
+                    <td>{a.id}</td>
+                    <td>{a.studentName}</td>
+                    <td style={{
+                      color: a.status?.toLowerCase() === 'present' ? 'green' : 'red',
+                      fontWeight: 'bold'
+                    }}>
+                      {a.status}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   );

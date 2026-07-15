@@ -26,43 +26,6 @@ header {
   padding: 0;
 }
 
-/* Sidebar */
-.sidebar {
-  width: 13%;
-  background-color:#3e4f60;
-  color: #000000;
-  padding-top: 2rem;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-}
-
-.sidebar ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.sidebar-link {
-  display: block;
-  padding: 0.9rem 1.5rem;
-  text-decoration: none;
-  color: #f5ecec;
-  font-size: 1rem;
-  background: none;
-  border: none;
-  text-align: left;
-  transition: background 0.3s, color 0.3s;
-}
-
-.sidebar-link:hover {
-  background-color: #f0f0f0;
-  color: #000000;
-}
-
-.sidebar-link.active {
-  background-color: #526170;
-  color: #ffffff;
-  font-weight: bold;
-}
 
 /* Main section */
 main {
@@ -79,4 +42,92 @@ footer {
   padding: 2rem;
   font-size: 0.9rem;
   box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
+}
+
+
+
+/* Sidebar */
+/* Mobile Sidebar */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: -260px;
+  width: 260px;
+  height: 100%;
+  background-color: #3e4f60;
+  padding-top: 2rem;
+  transition: left 0.3s ease;
+  z-index: 2000;
+}
+
+.sidebar.open {
+  left: 0;
+}
+
+.sidebar ul {
+  padding: 0;
+  list-style: none;
+}
+
+.sidebar-link {
+  display: block;
+  padding: 1rem 1.5rem;
+  color: white;
+  text-decoration: none;
+}
+
+
+
+/* CLOSE button */
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  font-size: 22px;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+/* Hide sidebar on desktop */
+@media (min-width: 1201px) {
+  .sidebar {
+    display: none;
+  }
+}
+
+/* Sidebar links (applies to <a> tags and <button>) */
+.sidebar-link {
+  display: block;
+  padding: 1rem 1.5rem;
+  color: white;
+  text-decoration: none;
+  background: none;
+  border: none;
+  text-align: left;
+  width: 100%;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+/* Logout button customization */
+.sidebar li button.sidebar-link {
+  color: black;          /* text color black */
+  background: none;      /* remove white background */
+  font-weight: normal;   /* same as other links */
+}
+
+
+
+/* Close button remains same */
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  font-size: 22px;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
 }
