@@ -71,4 +71,4 @@ Deployed using:
 - Render
 ## System Architecture
 
-![Architecture](src/assets/images/architecture.png)
+![Architecture](images/architecture.png)
