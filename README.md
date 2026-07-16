@@ -9,6 +9,13 @@ A full-stack school management platform built using React and Spring Boot that e
 ![Docker](https://img.shields.io/badge/Docker-Container-blue)
 # Application Preview
 
+![homepage](smart-school-frontend/src/assets/images/homepage.png)
+![adminmanageuser](smart-school-frontend/src/assets/images/adminManageUsers.png)
+![admindashboard](smart-school-frontend/src/assets/images/admindashboard.png)
+![teacherdashboard](smart-school-frontend/src/assets/images/teacherdashboard.png)
+![teachermanaginggrades](smart-school-frontend/src/assets/images/teachermanaginggrades.png)
+![studentdashboard](smart-school-frontend/src/assets/images/studentdashboard.png)
+![studentassignments](smart-school-frontend/src/assets/images/studentassignments.png)
 
 ## Demo
 
@@ -71,4 +78,4 @@ Deployed using:
 - Render
 ## System Architecture
 
-![homepage](smart-school-frontend/src/assets/images/homepage.png)
+![architectureDiagram](smart-school-frontend/src/assets/images/architectureDiagram.drawio.png)
