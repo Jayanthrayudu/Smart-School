@@ -1,0 +1,15 @@
+                 User Browser
+                      |
+                      |
+               React Application
+                      |
+                 Nginx Proxy
+                      |
+                      |
+              Spring Boot API
+                      |
+          -----------------------
+          |                     |
+      JWT Security          MongoDB
+          |
+     Authentication
