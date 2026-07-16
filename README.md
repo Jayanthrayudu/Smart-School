@@ -71,4 +71,4 @@ Deployed using:
 - Render
 ## System Architecture
 
-![Architecture](smart-school/smart-school-frontend/src/assets/images/homepage.png)
+![homepage](smart-school-frontend/src/assets/images/homepage.png)
